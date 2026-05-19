@@ -3,17 +3,19 @@ import { FC } from 'react';
 import { TOrder } from '@utils-types';
 import { FeedInfoUI } from '../ui/feed-info';
 
+type TProps = {
+  orders: TOrder[];
+  total: number;
+  totalToday: number;
+};
+
 const getOrders = (orders: TOrder[], status: string): number[] =>
   orders
     .filter((item) => item.status === status)
     .map((item) => item.number)
     .slice(0, 20);
 
-export const FeedInfo: FC = () => {
-  /** TODO: взять переменные из стора */
-  const orders: TOrder[] = [];
-  const feed = {};
-
+export const FeedInfo: FC<TProps> = ({ orders, total, totalToday }) => {
   const readyOrders = getOrders(orders, 'done');
 
   const pendingOrders = getOrders(orders, 'pending');
@@ -22,7 +24,10 @@ export const FeedInfo: FC = () => {
     <FeedInfoUI
       readyOrders={readyOrders}
       pendingOrders={pendingOrders}
-      feed={feed}
+      feed={{
+        total,
+        totalToday
+      }}
     />
   );
 };
