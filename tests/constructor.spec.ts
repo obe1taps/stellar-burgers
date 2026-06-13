@@ -52,15 +52,17 @@ test.describe('Конструктор бургера', () => {
 
     await page.getByText('Краторная булка N-200i').click();
 
-    await expect(page.getByTestId('modal')).toBeVisible();
-    await expect(page.getByText('Детали ингредиента')).toBeVisible();
+    const modal = page.getByTestId('modal');
+
+    await expect(modal).toBeVisible();
+    await expect(modal.getByText('Детали ингредиента')).toBeVisible();
     await expect(
-      page.getByRole('heading', { name: 'Краторная булка N-200i' })
+      modal.getByRole('heading', { name: 'Краторная булка N-200i' })
     ).toBeVisible();
 
     await page.getByTestId('modal-close-button').click();
 
-    await expect(page.getByTestId('modal')).not.toBeVisible();
+    await expect(modal).not.toBeVisible();
   });
 
   test('закрывает модальное окно ингредиента по оверлею', async ({ page }) => {
@@ -105,17 +107,23 @@ test.describe('Конструктор бургера', () => {
       .getByRole('button', { name: 'Добавить' })
       .click();
 
+    const constructor = page
+      .locator('section')
+      .filter({ hasText: 'Оформить заказ' });
+
     await page.getByRole('button', { name: 'Оформить заказ' }).click();
 
-    await expect(page.getByTestId('modal')).toBeVisible();
-    await expect(page.getByText('12345')).toBeVisible();
+    const modal = page.getByTestId('modal');
+
+    await expect(modal).toBeVisible();
+    await expect(modal.getByText('12345')).toBeVisible();
 
     await page.getByTestId('modal-close-button').click();
 
-    await expect(page.getByTestId('modal')).not.toBeVisible();
+    await expect(modal).not.toBeVisible();
 
-    await expect(page.getByText('Выберите булки').first()).toBeVisible();
-    await expect(page.getByText('Выберите начинку')).toBeVisible();
+    await expect(constructor.getByText('Выберите булки').first()).toBeVisible();
+    await expect(constructor.getByText('Выберите начинку')).toBeVisible();
 
     await page.evaluate(() => {
       window.localStorage.clear();
